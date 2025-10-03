@@ -1,36 +1,22 @@
 workflows:
   android-workflow:
-    name: Android Workflow
-    max_build_duration: 120
+    name: Android Workflow (Debug Build)
+    max_build_duration: 60
     instance_type: mac_mini_m1
     environment:
-      android_signing:
-        - keystore_reference
-      groups:
-        - google_play
-      flutter: stable
+      flutter: 3.22.0
       xcode: latest
-      cocoapods: default
     scripts:
-      - name: Set up key.properties
+      - name: Clean and get packages
         script: |
-          echo "storePassword=\$CM_KEYSTORE_PASSWORD" > android/key.properties
-          echo "keyPassword=\$CM_KEY_PASSWORD" >> android/key.properties
-          echo "keyAlias=\$CM_KEY_ALIAS" >> android/key.properties
-          echo "storeFile=\$CM_KEYSTORE_PATH" >> android/key.properties
-      - name: Get Flutter packages
+          flutter clean
+          flutter pub get
+      - name: Build Debug AAB (No signing required)
         script: |
-          flutter packages pub get
-      - name: Build AAB
-        script: |
-          flutter build appbundle --release
+          flutter build appbundle --debug
     artifacts:
-      - build/app/outputs/bundle/release/*.aab
-      - build/app/outputs/mapping.txt
+      - build/app/outputs/bundle/debug/*.aab
     publishing:
       email:
         recipients:
           - your-email@example.com
-      google_play:
-        credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
-        track: internal
