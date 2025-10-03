@@ -1,23 +1,30 @@
 workflows:
-  android-workflow:
-    name: Android Workflow (Debug Build)
+  android-release:
+    name: Android Release Build (Auto-signed)
     max_build_duration: 60
     instance_type: mac_mini_m1
     environment:
       flutter: 3.22.0
-      xcode: latest
+      android_signing:
+        - codemagic_keystore
+      groups:
+        - google_play_credentials
     scripts:
       - name: Clean and reset dependencies
         script: |
           rm -f pubspec.lock
           flutter clean
           flutter pub get
-      - name: Build Debug AAB (No signing required)
+      - name: Build signed Release AAB
         script: |
-          flutter build appbundle --debug
+          flutter build appbundle --release
     artifacts:
-      - build/app/outputs/bundle/debug/*.aab
+      - build/app/outputs/bundle/release/*.aab
     publishing:
       email:
         recipients:
           - your-email@example.com
+      google_play:
+        credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
+        track: internal
+        submit_as_draft: true
