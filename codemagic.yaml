@@ -1,21 +1,21 @@
 workflows:
   android-workflow:
-    name: Android Workflow (No Signing)
+    name: Android Workflow
     max_build_duration: 60
     instance_type: mac_mini_m1
     environment:
-      flutter: 3.24.5
+      flutter: 3.22.0
       xcode: latest
     scripts:
-      - name: Get Flutter packages
+      - name: Clean and get packages
         script: |
           flutter clean
           flutter pub get
-      - name: Build unsigned AAB
+      - name: Build AAB
         script: |
-          flutter build appbundle --debug
+          flutter build appbundle --release --no-tree-shake-icons
     artifacts:
-      - build/app/outputs/bundle/debug/*.aab
+      - build/app/outputs/bundle/release/*.aab
     publishing:
       email:
         recipients:
