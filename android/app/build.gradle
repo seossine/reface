@@ -14,7 +14,7 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace = "com.mycompany.CounterApp"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 35  // Updated to match targetSdk
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
@@ -41,7 +41,7 @@ android {
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
+        targetSdk = 35  // Updated to API level 35 for Google Play requirements
         versionCode = 1
         versionName = "1.0.0"
     }
@@ -51,6 +51,11 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.release
+            
+            // Enable NDK debug symbols upload for better crash analysis
+            ndk {
+                debugSymbolLevel 'FULL'
+            }
         }
     }
 }
