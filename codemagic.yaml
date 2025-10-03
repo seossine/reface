@@ -7,8 +7,9 @@ workflows:
       flutter: 3.22.0
       xcode: latest
     scripts:
-      - name: Clean and get packages
+      - name: Clean and reset dependencies
         script: |
+          rm -f pubspec.lock
           flutter clean
           flutter pub get
       - name: Build Debug AAB (No signing required)
